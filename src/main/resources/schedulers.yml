@@ -1,0 +1,35 @@
+schedulers:
+  example1: # Every day at 18h00
+    # DAILY, WEEKLY, MONTHLY, YEARLY
+    type: DAILY
+    hour: 18
+    minute: 0
+    minPlayer: 10 # The minimum number of players for commands to execute
+    commands:
+      - "bc Daily broadcast message everyday at 18h00"
+  example2: # Every monday at 15h30
+    # DAILY, WEEKLY, MONTHLY, YEARLY
+    type: WEEKLY
+    day: MONDAY
+    hour: 15
+    minute: 30
+    implementation: ZKOTH # zKoth implementation
+    koth_name: "koth_example" # koth name
+    start_now: false # start without cooldown
+  example3: # every 14th of the month at 12h01
+    # DAILY, WEEKLY, MONTHLY, YEARLY
+    type: MONTHLY
+    day: 14
+    hour: 12
+    minute: 1
+    commands:
+      - "bc Broadcast message every 14th of the month at 12h01"
+  example4: # every 1er of january at 00  :00
+    # DAILY, WEEKLY, MONTHLY, YEARLY
+    type: YEARLY
+    month: JANUARY
+    day: 1
+    hour: 0
+    minute: 0
+    commands:
+      - "bc Broadcast message every 14th of the month at 12h01"
