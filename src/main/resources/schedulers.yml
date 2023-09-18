@@ -1,3 +1,24 @@
+########################################################################################################################
+#
+#  ███████╗░██████╗░█████╗░██╗░░██╗███████╗██████╗░██╗░░░██╗██╗░░░░░███████╗██████╗░░██████╗
+#  ╚════██║██╔════╝██╔══██╗██║░░██║██╔════╝██╔══██╗██║░░░██║██║░░░░░██╔════╝██╔══██╗██╔════╝
+#  ░░███╔═╝╚█████╗░██║░░╚═╝███████║█████╗░░██║░░██║██║░░░██║██║░░░░░█████╗░░██████╔╝╚█████╗░
+#  ██╔══╝░░░╚═══██╗██║░░██╗██╔══██║██╔══╝░░██║░░██║██║░░░██║██║░░░░░██╔══╝░░██╔══██╗░╚═══██╗
+#  ███████╗██████╔╝╚█████╔╝██║░░██║███████╗██████╔╝╚██████╔╝███████╗███████╗██║░░██║██████╔╝
+#  ╚══════╝╚═════╝░░╚════╝░╚═╝░░╚═╝╚══════╝╚═════╝░░╚═════╝░╚══════╝╚══════╝╚═╝░░╚═╝╚═════╝░
+#
+# Scheduler type:
+# - DAILY : Runs all days, you must provide hours and minutes
+# - WEEKLY : Runs every week, you must provide day of week, hours and minutes
+# - MONTHLY : Runs every month, you must provide hours and minutes
+# - YEARLY : Runs every year, you must provide month, day of month, hours and minutes
+#
+# Type: DAILY, WEEKLY, MONTHLY, YEARLY
+# Days: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+# Month: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+#
+########################################################################################################################
+
 schedulers:
   example1: # Every day at 18h00
     # DAILY, WEEKLY, MONTHLY, YEARLY
@@ -32,4 +53,4 @@ schedulers:
     hour: 0
     minute: 0
     commands:
-      - "bc Broadcast message every 14th of the month at 12h01"
+      - "bc Broadcast message every first of year at 00h00"

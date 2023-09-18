@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.text.DateFormatSymbols;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +49,7 @@ public class SchedulerLoader implements Loader<Scheduler> {
         int minute = configuration.getInt(path + "minute");
         int minPlayer = configuration.getInt(path + "minPlayer");
         List<String> commands = configuration.getStringList(path + "commands");
+        String implementationName = configuration.getString(path + "implementation");
         Implementation implementation = null;
 
         switch (schedulerType) {
@@ -77,7 +77,7 @@ public class SchedulerLoader implements Loader<Scheduler> {
                 break;
         }
 
-        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, minute, minPlayer, commands, implementation);
+        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, minute, minPlayer, commands, implementation, implementationName);
     }
 
     @Override

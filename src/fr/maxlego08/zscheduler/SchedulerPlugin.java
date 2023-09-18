@@ -2,7 +2,6 @@ package fr.maxlego08.zscheduler;
 
 import fr.maxlego08.zscheduler.api.SchedulerManager;
 import fr.maxlego08.zscheduler.command.commands.CommandSchedulers;
-import fr.maxlego08.zscheduler.implementations.ZKothImplementation;
 import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
 import fr.maxlego08.zscheduler.save.Config;
 import fr.maxlego08.zscheduler.save.MessageLoader;
@@ -29,8 +28,6 @@ public class SchedulerPlugin extends ZPlugin {
 
         this.registerCommand("schedulers", new CommandSchedulers(this));
         this.getServer().getServicesManager().register(SchedulerManager.class, this.manager, this, ServicePriority.Highest);
-
-        this.manager.registerImplementation(new ZKothImplementation());
 
         this.addSave(Config.getInstance());
         this.addSave(new MessageLoader(this));

@@ -21,12 +21,13 @@ public class Scheduler {
     private final int minute;
     private final int minPlayer;
     private final List<String> commands;
-    private final Implementation implementation;
+    private final String implementationName;
+    private Implementation implementation;
 
     private Calendar calendar = null;
     private final Timer timer = new Timer();
 
-    public Scheduler(Plugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation) {
+    public Scheduler(Plugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -38,6 +39,7 @@ public class Scheduler {
         this.minPlayer = minPlayer;
         this.commands = commands;
         this.implementation = implementation;
+        this.implementationName = implementationName;
     }
 
     public void setCalendar(Calendar calendar) {
@@ -98,18 +100,18 @@ public class Scheduler {
             @Override
             public void run() {
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    // if (config.getMinPlayer() >= 10) {
-                    for (String command : commands) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                    int online = Bukkit.getOnlinePlayers().size();
+                    if (online >= minPlayer) {
+                        for (String command : commands) {
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                        }
                     }
-                    // }
                 });
             }
         };
 
         Calendar now = new GregorianCalendar();
         switch (schedulerType) {
-            default:
             case DAILY:
                 calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), hour, minute);
                 break;
@@ -142,9 +144,6 @@ public class Scheduler {
                 case YEARLY:
                     calendar.add(Calendar.YEAR, 1);
                     break;
-
-                default:
-                    break;
             }
         }
 
@@ -162,5 +161,13 @@ public class Scheduler {
                 timer.schedule(task, calendar.getTime(), 365L * 24L * 60L * 60L * 1000L);
                 break;
         }
+    }
+
+    public void setImplementation(Implementation implementation) {
+        this.implementation = implementation;
+    }
+
+    public String getImplementationName() {
+        return implementationName;
     }
 }

@@ -105,13 +105,5 @@
             <version>9.4.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>fr.maxlego08.zkoth</groupId>
-            <artifactId>zKoth</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/zKothV2.jar</systemPath>
-        </dependency>
-
     </dependencies>
 </project>

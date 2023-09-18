@@ -62,6 +62,13 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
         Optional<Implementation> optional = getImplementation(implementation.getName());
         if (!optional.isPresent()) {
             implementations.add(implementation);
+
+            schedulers.forEach(sc -> {
+                if (sc.getImplementationName() != null && sc.getImplementationName().equalsIgnoreCase(implementation.getName())) {
+                    sc.setImplementation(implementation);
+                }
+            });
+
             return true;
         }
         return false;
