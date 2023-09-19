@@ -105,6 +105,9 @@ public class Scheduler {
 
     private void nextScheduler() {
         switch (schedulerType) {
+            case HOURLY:
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
+                break;
             case DAILY:
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
                 break;
@@ -147,6 +150,9 @@ public class Scheduler {
 
         Calendar now = new GregorianCalendar();
         switch (schedulerType) {
+            case HOURLY:
+                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), minute);
+                break;
             case DAILY:
                 calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), hour, minute);
                 break;
@@ -170,6 +176,9 @@ public class Scheduler {
         }
 
         switch (schedulerType) {
+            case HOURLY:
+                timer.schedule(task, calendar.getTime(), 60 * 60 * 1000);
+                break;
             case DAILY:
                 timer.schedule(task, calendar.getTime(), 24 * 60 * 60 * 1000);
                 break;
