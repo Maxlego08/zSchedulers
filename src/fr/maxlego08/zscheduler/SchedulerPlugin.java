@@ -8,6 +8,7 @@ import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
 import fr.maxlego08.zscheduler.save.Config;
 import fr.maxlego08.zscheduler.save.MessageLoader;
 import fr.maxlego08.zscheduler.zcore.ZPlugin;
+import fr.maxlego08.zscheduler.zcore.utils.plugins.Metrics;
 import org.bukkit.plugin.ServicePriority;
 
 /**
@@ -38,6 +39,8 @@ public class SchedulerPlugin extends ZPlugin {
         this.addSave(Config.getInstance());
         this.addSave(new MessageLoader(this));
         this.addSave(this.manager);
+
+        new Metrics(this, 19833);
 
         this.loadFiles();
 
