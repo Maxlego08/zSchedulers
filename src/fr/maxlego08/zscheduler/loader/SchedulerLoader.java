@@ -6,22 +6,21 @@ import fr.maxlego08.zscheduler.api.Scheduler;
 import fr.maxlego08.zscheduler.api.SchedulerType;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.loader.Loader;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.text.DateFormatSymbols;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class SchedulerLoader implements Loader<Scheduler> {
 
-    private static final Map<String, Integer> DAYS = IntStream.range(1, 8)
-            .collect(HashMap::new, (map, month) -> map.put(new DateFormatSymbols(Locale.ENGLISH).getWeekdays()[month].toUpperCase(), month), HashMap::putAll);
-    private static final Map<String, Integer> MONTHS = IntStream.range(0, 11)
-            .collect(HashMap::new, (map, month) -> map.put(new DateFormatSymbols(Locale.ENGLISH).getMonths()[month].toUpperCase(), month), HashMap::putAll);
+    private static final Map<String, Integer> DAYS = IntStream.range(1, 8).collect(HashMap::new, (map, month) -> map.put(new DateFormatSymbols(Locale.ENGLISH).getWeekdays()[month].toUpperCase(), month), HashMap::putAll);
+    private static final Map<String, Integer> MONTHS = IntStream.range(0, 11).collect(HashMap::new, (map, month) -> map.put(new DateFormatSymbols(Locale.ENGLISH).getMonths()[month].toUpperCase(), month), HashMap::putAll);
 
     private final SchedulerPlugin plugin;
     private final String name;
@@ -50,8 +49,25 @@ public class SchedulerLoader implements Loader<Scheduler> {
         int minute = configuration.getInt(path + "minute");
         int minPlayer = configuration.getInt(path + "minPlayer");
         List<String> commands = configuration.getStringList(path + "commands");
-        String implementationName = configuration.getString(path + "implementation");
+        ConfigurationSection implementationSection = configuration.getConfigurationSection(path + "implementation.");
         Implementation implementation = null;
+        String implementationName = "";
+        Map<String, Object> implementationValues = new HashMap<>();
+
+        if (implementationSection != null) {
+            for (String key : implementationSection.getKeys(false)) {
+                if (key.equals("name")) {
+                    implementationName = configuration.getString(path + "implementation." + key);
+                } else implementationValues.put(key, configuration.get(path + "implementation." + key));
+            }
+
+            if (implementationName != null) {
+                Optional<Implementation> optional = plugin.getManager().getImplementation(implementationName);
+                if (optional.isPresent()) {
+                    implementation = optional.get();
+                }
+            }
+        }
 
         switch (schedulerType) {
             case WEEKLY:
@@ -78,7 +94,7 @@ public class SchedulerLoader implements Loader<Scheduler> {
                 break;
         }
 
-        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, minute, minPlayer, commands, implementation, implementationName);
+        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, minute, minPlayer, commands, implementation, implementationName, implementationValues);
     }
 
     @Override

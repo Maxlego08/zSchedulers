@@ -40,13 +40,11 @@ public class DistantPlaceholder extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player p, @NotNull String params) {
-        System.out.println("B");
         return this.placeholder.onRequest(p, params);
     }
 
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-        System.out.println("A");
         return this.placeholder.onRequest(null, params);
     }
 }

@@ -34,9 +34,10 @@ schedulers:
     day: MONDAY
     hour: 15
     minute: 30
-    implementation: ZKOTH # zKoth implementation
-    koth_name: "koth_example" # koth name
-    start_now: false # start without cooldown
+    implementation: # Custom implementation
+      name: ZKOTH # zKoth implementation
+      koth_name: "koth_example" # koth name
+      start_now: false # start without cooldown
   example3: # every 14th of the month at 12h01
     # DAILY, WEEKLY, MONTHLY, YEARLY
     type: MONTHLY

@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,8 +29,9 @@ public class Scheduler {
 
     private Calendar calendar = null;
     private final Timer timer = new Timer();
+    private final Map<String, Object> implementationValues;
 
-    public Scheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName) {
+    public Scheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -42,10 +44,15 @@ public class Scheduler {
         this.commands = commands;
         this.implementation = implementation;
         this.implementationName = implementationName;
+        this.implementationValues = implementationValues;
     }
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
+    }
+
+    public Map<String, Object> getImplementationValues() {
+        return implementationValues;
     }
 
     public String getName() {
