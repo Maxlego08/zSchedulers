@@ -1,5 +1,6 @@
 package fr.maxlego08.zscheduler.loader;
 
+import fr.maxlego08.zscheduler.SchedulerPlugin;
 import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
 import fr.maxlego08.zscheduler.api.SchedulerType;
@@ -22,10 +23,10 @@ public class SchedulerLoader implements Loader<Scheduler> {
     private static final Map<String, Integer> MONTHS = IntStream.range(0, 11)
             .collect(HashMap::new, (map, month) -> map.put(new DateFormatSymbols(Locale.ENGLISH).getMonths()[month].toUpperCase(), month), HashMap::putAll);
 
-    private final Plugin plugin;
+    private final SchedulerPlugin plugin;
     private final String name;
 
-    public SchedulerLoader(Plugin plugin, String name) {
+    public SchedulerLoader(SchedulerPlugin plugin, String name) {
         this.plugin = plugin;
         this.name = name;
     }

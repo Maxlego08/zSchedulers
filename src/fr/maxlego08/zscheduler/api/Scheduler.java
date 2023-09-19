@@ -1,9 +1,9 @@
 package fr.maxlego08.zscheduler.api;
 
+import fr.maxlego08.zscheduler.SchedulerPlugin;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.builder.TimerBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -13,7 +13,7 @@ import java.util.TimerTask;
 
 public class Scheduler {
 
-    private final Plugin plugin;
+    private final SchedulerPlugin plugin;
     private final String name;
     private final SchedulerType schedulerType;
     private final int dayOfMonth;
@@ -29,7 +29,7 @@ public class Scheduler {
     private Calendar calendar = null;
     private final Timer timer = new Timer();
 
-    public Scheduler(Plugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName) {
+    public Scheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -115,15 +115,19 @@ public class Scheduler {
 
     public void start() {
 
+        Scheduler scheduler = this;
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                Bukkit.getScheduler().runTask(plugin, () -> {
+                plugin.getServerImplementation().runNextTick(() -> {
                     int online = Bukkit.getOnlinePlayers().size();
-                    System.out.println(online + " >= " + minPlayer);
                     if (online >= minPlayer) {
                         for (String command : commands) {
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                        }
+
+                        if (implementation != null) {
+                            implementation.schedule(scheduler);
                         }
                     } else {
                         Logger.info("Not enough players to execute the scheduler " + name + ", minimum player: " + minPlayer, Logger.LogType.INFO);
@@ -175,32 +179,7 @@ public class Scheduler {
     }
 
     public String getFormattedTimeUntilNextTask() {
-        Calendar now = new GregorianCalendar();
-        long timeInMillis = calendar.getTimeInMillis() - now.getTimeInMillis();
-
-        System.out.println(timeInMillis + " < 0 = " + (timeInMillis < 0));
-
-        if (timeInMillis < 0) {
-            switch (schedulerType) {
-                case DAILY:
-                    timeInMillis += 24 * 60 * 60 * 1000;
-                    break;
-                case WEEKLY:
-                    timeInMillis += 7 * 24 * 60 * 60 * 1000;
-                    break;
-                case MONTHLY:
-                    timeInMillis += 30L * 24L * 60L * 60L * 1000L;
-                    break;
-                case YEARLY:
-                    timeInMillis += 365L * 24L * 60L * 60L * 1000L;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        long seconds = timeInMillis / 1000;
-        return TimerBuilder.getStringTime(seconds);
+        return TimerBuilder.getStringTime((calendar.getTimeInMillis() - new GregorianCalendar().getTimeInMillis()) / 1000);
     }
 
     public void setImplementation(Implementation implementation) {

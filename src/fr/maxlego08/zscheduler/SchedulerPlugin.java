@@ -1,5 +1,7 @@
 package fr.maxlego08.zscheduler;
 
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.ServerImplementation;
 import fr.maxlego08.zscheduler.api.SchedulerManager;
 import fr.maxlego08.zscheduler.command.commands.CommandSchedulers;
 import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
@@ -16,6 +18,7 @@ import org.bukkit.plugin.ServicePriority;
  */
 public class SchedulerPlugin extends ZPlugin {
 
+    private ServerImplementation serverImplementation;
     private final ZSchedulerManager manager = new ZSchedulerManager(this);
 
     @Override
@@ -23,6 +26,9 @@ public class SchedulerPlugin extends ZPlugin {
 
         LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
         placeholder.setPrefix("zscheduler");
+
+        FoliaLib foliaLib = new FoliaLib(this);
+        serverImplementation = foliaLib.getImpl();
 
         this.preEnable();
 
@@ -50,5 +56,9 @@ public class SchedulerPlugin extends ZPlugin {
 
     public ZSchedulerManager getManager() {
         return manager;
+    }
+
+    public ServerImplementation getServerImplementation() {
+        return serverImplementation;
     }
 }

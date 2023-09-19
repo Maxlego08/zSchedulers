@@ -9,4 +9,11 @@ public interface Implementation {
      */
     String getName();
 
+    /**
+     * Schedule task
+     *
+     * @param scheduler - {@link Scheduler}
+     */
+    void schedule(Scheduler scheduler);
+
 }

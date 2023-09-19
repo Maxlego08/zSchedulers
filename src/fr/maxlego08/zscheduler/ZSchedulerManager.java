@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class ZSchedulerManager implements Saveable, SchedulerManager {
-
     private final List<Implementation> implementations = new ArrayList<>();
     private final List<Scheduler> schedulers = new ArrayList<>();
     private final SchedulerPlugin plugin;
