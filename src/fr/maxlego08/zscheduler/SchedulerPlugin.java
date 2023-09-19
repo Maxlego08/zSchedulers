@@ -26,7 +26,7 @@ public class SchedulerPlugin extends ZPlugin {
 
         this.preEnable();
 
-        this.registerCommand("schedulers", new CommandSchedulers(this));
+        this.registerCommand("zschedulers", new CommandSchedulers(this), "schedulers", "scheduler", "sch");
         this.getServer().getServicesManager().register(SchedulerManager.class, this.manager, this, ServicePriority.Highest);
 
         this.addSave(Config.getInstance());

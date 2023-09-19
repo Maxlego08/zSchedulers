@@ -4,6 +4,7 @@ public enum Permission {
 	
 	SCHEDULERS_USE,
 	SCHEDULERS_RELOAD,
+	SCHEDULERS_LIST,
 
 	;
 

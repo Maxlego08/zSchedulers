@@ -1,5 +1,7 @@
 package fr.maxlego08.zscheduler.api;
 
+import fr.maxlego08.zscheduler.zcore.logger.Logger;
+import fr.maxlego08.zscheduler.zcore.utils.builder.TimerBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -94,6 +96,23 @@ public class Scheduler {
         timer.cancel();
     }
 
+    private void nextScheduler() {
+        switch (schedulerType) {
+            case DAILY:
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                break;
+            case WEEKLY:
+                calendar.add(Calendar.DAY_OF_MONTH, 7);
+                break;
+            case MONTHLY:
+                calendar.add(Calendar.MONTH, 1);
+                break;
+            case YEARLY:
+                calendar.add(Calendar.YEAR, 1);
+                break;
+        }
+    }
+
     public void start() {
 
         TimerTask task = new TimerTask() {
@@ -101,11 +120,16 @@ public class Scheduler {
             public void run() {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     int online = Bukkit.getOnlinePlayers().size();
+                    System.out.println(online + " >= " + minPlayer);
                     if (online >= minPlayer) {
                         for (String command : commands) {
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                         }
+                    } else {
+                        Logger.info("Not enough players to execute the scheduler " + name + ", minimum player: " + minPlayer, Logger.LogType.INFO);
                     }
+
+                    nextScheduler();
                 });
             }
         };
@@ -131,20 +155,7 @@ public class Scheduler {
         }
 
         if (calendar.before(now)) {
-            switch (schedulerType) {
-                case DAILY:
-                    calendar.add(Calendar.DAY_OF_MONTH, 1);
-                    break;
-                case WEEKLY:
-                    calendar.add(Calendar.DAY_OF_MONTH, 7);
-                    break;
-                case MONTHLY:
-                    calendar.add(Calendar.MONTH, 1);
-                    break;
-                case YEARLY:
-                    calendar.add(Calendar.YEAR, 1);
-                    break;
-            }
+            nextScheduler();
         }
 
         switch (schedulerType) {
@@ -161,6 +172,35 @@ public class Scheduler {
                 timer.schedule(task, calendar.getTime(), 365L * 24L * 60L * 60L * 1000L);
                 break;
         }
+    }
+
+    public String getFormattedTimeUntilNextTask() {
+        Calendar now = new GregorianCalendar();
+        long timeInMillis = calendar.getTimeInMillis() - now.getTimeInMillis();
+
+        System.out.println(timeInMillis + " < 0 = " + (timeInMillis < 0));
+
+        if (timeInMillis < 0) {
+            switch (schedulerType) {
+                case DAILY:
+                    timeInMillis += 24 * 60 * 60 * 1000;
+                    break;
+                case WEEKLY:
+                    timeInMillis += 7 * 24 * 60 * 60 * 1000;
+                    break;
+                case MONTHLY:
+                    timeInMillis += 30L * 24L * 60L * 60L * 1000L;
+                    break;
+                case YEARLY:
+                    timeInMillis += 365L * 24L * 60L * 60L * 1000L;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        long seconds = timeInMillis / 1000;
+        return TimerBuilder.getStringTime(seconds);
     }
 
     public void setImplementation(Implementation implementation) {

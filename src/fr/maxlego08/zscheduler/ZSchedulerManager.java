@@ -4,6 +4,8 @@ import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
 import fr.maxlego08.zscheduler.api.SchedulerManager;
 import fr.maxlego08.zscheduler.loader.SchedulerLoader;
+import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
+import fr.maxlego08.zscheduler.save.Config;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.loader.Loader;
 import fr.maxlego08.zscheduler.zcore.utils.storage.Persist;
@@ -12,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +27,34 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
 
     public ZSchedulerManager(SchedulerPlugin plugin) {
         this.plugin = plugin;
+        LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
+
+        // %zscheduler_time_<name>%
+        placeholder.register("time_", (player, args) -> {
+            Optional<Scheduler> optional = getScheduler(args);
+            if (optional.isPresent()) {
+                Scheduler scheduler = optional.get();
+                return scheduler.getFormattedTimeUntilNextTask();
+            }
+            return "Scheduler " + args + " not found";
+        });
+
+        // %zscheduler_date_<name>%
+        placeholder.register("date_", (player, args) -> {
+            Optional<Scheduler> optional = getScheduler(args);
+            if (optional.isPresent()) {
+                Scheduler scheduler = optional.get();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Config.dateFormat);
+                return simpleDateFormat.format(scheduler.getCalendar().getTime());
+            }
+            return "Scheduler " + args + " not found";
+        });
     }
 
     @Override
     public void save(Persist persist) {
         schedulers.forEach(Scheduler::disable);
+        schedulers.clear();
     }
 
     @Override
@@ -55,6 +81,16 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
             scheduler.start();
             schedulers.add(scheduler);
         }
+    }
+
+    @Override
+    public List<Scheduler> getSchedulers() {
+        return schedulers;
+    }
+
+    @Override
+    public Optional<Scheduler> getScheduler(String name) {
+        return schedulers.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst();
     }
 
     @Override

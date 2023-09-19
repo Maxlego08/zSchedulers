@@ -11,6 +11,7 @@ import fr.maxlego08.zscheduler.inventory.ZInventoryManager;
 import fr.maxlego08.zscheduler.listener.AdapterListener;
 import fr.maxlego08.zscheduler.listener.ListenerAdapter;
 import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
+import fr.maxlego08.zscheduler.placeholder.Placeholder;
 import fr.maxlego08.zscheduler.zcore.enums.EnumInventory;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.logger.Logger.LogType;
@@ -52,6 +53,7 @@ public abstract class ZPlugin extends JavaPlugin {
     protected void preEnable() {
 
         LocalPlaceholder.getInstance().setPlugin((SchedulerPlugin) this);
+        Placeholder.getPlaceholder();
 
         this.enableTime = System.currentTimeMillis();
 
