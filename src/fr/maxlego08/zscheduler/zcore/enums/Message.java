@@ -44,6 +44,7 @@ public enum Message {
     RELOAD("§aYou have just reloaded the configuration files."),
 
     DESCRIPTION_RELOAD("Reload configuration files"),
+    DESCRIPTION_VERSION("Show plugin version"),
     DESCRIPTION_LIST("Reload configuration files"),
 
     SCHEDULER_LIST_HEADER("§fSchedulers§8:"),

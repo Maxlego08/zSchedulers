@@ -12,6 +12,7 @@ public class CommandSchedulers extends VCommand {
 		this.setPermission(Permission.SCHEDULERS_USE);
 		this.addSubCommand(new CommandSchedulersReload(plugin));
 		this.addSubCommand(new CommandSchedulersList(plugin));
+		this.addSubCommand(new CommandSchedulersVersion(plugin));
 	}
 
 	@Override
