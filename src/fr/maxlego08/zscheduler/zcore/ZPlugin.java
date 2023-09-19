@@ -69,8 +69,8 @@ public abstract class ZPlugin extends JavaPlugin {
         this.inventoryManager = new ZInventoryManager((SchedulerPlugin) this);
 
         /* Add Listener */
-        this.addListener(new AdapterListener((SchedulerPlugin) this));
-        this.addListener(this.inventoryManager);
+        // this.addListener(new AdapterListener((SchedulerPlugin) this));
+        // this.addListener(this.inventoryManager);
     }
 
     protected void postEnable() {
