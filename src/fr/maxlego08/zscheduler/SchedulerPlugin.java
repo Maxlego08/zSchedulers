@@ -1,12 +1,14 @@
 package fr.maxlego08.zscheduler;
 
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.ServerImplementation;
 import fr.maxlego08.zscheduler.api.SchedulerManager;
 import fr.maxlego08.zscheduler.command.commands.CommandSchedulers;
-import fr.maxlego08.zscheduler.implementations.ZKothImplementation;
 import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
 import fr.maxlego08.zscheduler.save.Config;
 import fr.maxlego08.zscheduler.save.MessageLoader;
 import fr.maxlego08.zscheduler.zcore.ZPlugin;
+import fr.maxlego08.zscheduler.zcore.utils.plugins.Metrics;
 import org.bukkit.plugin.ServicePriority;
 
 /**
@@ -17,24 +19,28 @@ import org.bukkit.plugin.ServicePriority;
  */
 public class SchedulerPlugin extends ZPlugin {
 
+    private ServerImplementation serverImplementation;
     private final ZSchedulerManager manager = new ZSchedulerManager(this);
 
     @Override
     public void onEnable() {
 
         LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
-        placeholder.setPrefix("zscheduler");
+        placeholder.setPrefix("zschedulers");
+
+        FoliaLib foliaLib = new FoliaLib(this);
+        serverImplementation = foliaLib.getImpl();
 
         this.preEnable();
 
-        this.registerCommand("schedulers", new CommandSchedulers(this));
+        this.registerCommand("zschedulers", new CommandSchedulers(this), "schedulers", "scheduler", "sch");
         this.getServer().getServicesManager().register(SchedulerManager.class, this.manager, this, ServicePriority.Highest);
-
-        this.manager.registerImplementation(new ZKothImplementation());
 
         this.addSave(Config.getInstance());
         this.addSave(new MessageLoader(this));
         this.addSave(this.manager);
+
+        new Metrics(this, 19833);
 
         this.loadFiles();
 
@@ -53,5 +59,9 @@ public class SchedulerPlugin extends ZPlugin {
 
     public ZSchedulerManager getManager() {
         return manager;
+    }
+
+    public ServerImplementation getServerImplementation() {
+        return serverImplementation;
     }
 }

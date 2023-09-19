@@ -9,9 +9,10 @@ public class CommandSchedulers extends VCommand {
 
 	public CommandSchedulers(SchedulerPlugin plugin) {
 		super(plugin);
-		this.addSubCommand("zschedulers", "scheduler", "sch");
 		this.setPermission(Permission.SCHEDULERS_USE);
 		this.addSubCommand(new CommandSchedulersReload(plugin));
+		this.addSubCommand(new CommandSchedulersList(plugin));
+		this.addSubCommand(new CommandSchedulersVersion(plugin));
 	}
 
 	@Override

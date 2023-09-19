@@ -10,7 +10,7 @@ import java.util.Map;
 
 public enum Message {
 
-    PREFIX("§8(§6Template§8) "),
+    PREFIX("§8(§6zScheduler§8) "),
 
     TELEPORT_MOVE("§cYou must not move!"),
     TELEPORT_MESSAGE("§7Teleportation in §3%second% §7seconds!"),
@@ -44,6 +44,11 @@ public enum Message {
     RELOAD("§aYou have just reloaded the configuration files."),
 
     DESCRIPTION_RELOAD("Reload configuration files"),
+    DESCRIPTION_VERSION("Show plugin version"),
+    DESCRIPTION_LIST("Reload configuration files"),
+
+    SCHEDULER_LIST_HEADER("§fSchedulers§8:"),
+    SCHEDULER_LIST_LINE("§b%name% §8- §7%date%"),
 
     ;
 

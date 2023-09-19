@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.maxlego08</groupId>
-    <artifactId>zScheduler</artifactId>
+    <artifactId>zSchedulers</artifactId>
     <version>1.0.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,32 +23,29 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.1</version>
-                <configuration>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>com/cryptomorin/xseries/messages/*</exclude>
-                                <exclude>com/cryptomorin/xseries/particles/*</exclude>
-                                <exclude>com/cryptomorin/xseries/XBiome*</exclude>
-                                <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
-                                <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
-                                <exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
-                                <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
-                                <exclude>com/cryptomorin/xseries/XTag*</exclude>
-                                <exclude>com/cryptomorin/xseries/XPotion*</exclude>
-                                <exclude>com/cryptomorin/xseries/XMaterial*</exclude>
-                                <exclude>com/cryptomorin/xseries/XItemStack*</exclude>
-                                <exclude>com/cryptomorin/xseries/XBlock*</exclude>
-                                <exclude>com/cryptomorin/xseries/XEntity*</exclude>
-                                <exclude>com/cryptomorin/xseries/XEnchantment*</exclude>
-                                <exclude>com/cryptomorin/xseries/SkullUtils*</exclude>
-                                <exclude>com/cryptomorin/xseries/ReflectionUtils*</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                </configuration>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.tcoded:FoliaLib</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.tcoded.folialib</pattern>
+                                    <!-- Don't forget to replace -->
+                                    <shadedPattern>fr.maxlego08.zscheduler.folialib</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -66,12 +63,12 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>minecraft-repo</id>
-            <url>https://libraries.minecraft.net/</url>
-        </repository>
-        <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>devmart-other</id>
+            <url>https://nexuslite.gcnt.net/repos/other/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -81,10 +78,11 @@
             <version>1.0.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <!--This adds the Spigot API artifact to the build -->
         <dependency>
-            <groupId>dev.folia</groupId>
-            <artifactId>folia-api</artifactId>
-            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -94,23 +92,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>authlib</artifactId>
-            <version>3.11.50</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.cryptomorin</groupId>
-            <artifactId>XSeries</artifactId>
-            <version>9.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>fr.maxlego08.zkoth</groupId>
-            <artifactId>zKoth</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/zKothV2.jar</systemPath>
+            <groupId>com.tcoded</groupId>
+            <artifactId>FoliaLib</artifactId>
+            <version>0.2.5</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
