@@ -26,7 +26,7 @@ public class SchedulerPlugin extends ZPlugin {
     public void onEnable() {
 
         LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
-        placeholder.setPrefix("zscheduler");
+        placeholder.setPrefix("zschedulers");
 
         FoliaLib foliaLib = new FoliaLib(this);
         serverImplementation = foliaLib.getImpl();

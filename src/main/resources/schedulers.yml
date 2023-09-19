@@ -7,19 +7,22 @@
 #  ███████╗██████╔╝╚█████╔╝██║░░██║███████╗██████╔╝╚██████╔╝███████╗███████╗██║░░██║██████╔╝
 #  ╚══════╝╚═════╝░░╚════╝░╚═╝░░╚═╝╚══════╝╚═════╝░░╚═════╝░╚══════╝╚══════╝╚═╝░░╚═╝╚═════╝░
 #
+# Documentation: https://scheduler.groupez.dev/
+#
 # Scheduler type:
-# - DAILY : Runs all days, you must provide hours and minutes
-# - WEEKLY : Runs every week, you must provide day of week, hours and minutes
-# - MONTHLY : Runs every month, you must provide hours and minutes
-# - YEARLY : Runs every year, you must provide month, day of month, hours and minutes
+# - HOURLY : Runs every hour at the same minute.
+# - DAILY : Runs all days, you must provide hours and minutes.
+# - WEEKLY : Runs every week, you must provide day of week, hours and minutes.
+# - MONTHLY : Runs every month, you must provide hours and minutes.
+# - YEARLY : Runs every year, you must provide month, day of month, hours and minutes.
 #
 # Type: HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY
 # Days: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 # Month: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
 #
 # Placeholders:
-#   - %zscheduler_time_<scheduler name>% - Displays the time remaining before the next placeholder run
-#   - %zscheduler_date_<scheduler name>% - Displays the date for the next placeholder run
+#   - %zschedulers_time_<scheduler name>% - Displays the time remaining before the next placeholder run
+#   - %zschedulers_date_<scheduler name>% - Displays the date for the next placeholder run
 #
 # Commands:
 #   - /zschedulers list - Display scheduler list
@@ -52,7 +55,7 @@ schedulers:
     minute: 30
     implementation: # Custom implementation
       name: ZKOTH # zKoth implementation
-      koth_name: "koth_example" # koth name
+      koth_name: "koth_name" # koth name
       start_now: false # start without cooldown
   example3: # every 14th of the month at 12h01
     type: MONTHLY
