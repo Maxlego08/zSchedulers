@@ -1,6 +1,7 @@
 package fr.maxlego08.zscheduler.api;
 
 import fr.maxlego08.zscheduler.SchedulerPlugin;
+import fr.maxlego08.zscheduler.save.Config;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.builder.TimerBuilder;
 import org.bukkit.Bukkit;
@@ -25,11 +26,10 @@ public class Scheduler {
     private final int minPlayer;
     private final List<String> commands;
     private final String implementationName;
-    private Implementation implementation;
-
-    private Calendar calendar = null;
     private final Timer timer = new Timer();
     private final Map<String, Object> implementationValues;
+    private Implementation implementation;
+    private Calendar calendar = null;
 
     public Scheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
@@ -45,10 +45,6 @@ public class Scheduler {
         this.implementation = implementation;
         this.implementationName = implementationName;
         this.implementationValues = implementationValues;
-    }
-
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
     }
 
     public Map<String, Object> getImplementationValues() {
@@ -95,8 +91,16 @@ public class Scheduler {
         return implementation;
     }
 
+    public void setImplementation(Implementation implementation) {
+        this.implementation = implementation;
+    }
+
     public Calendar getCalendar() {
         return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
     }
 
     public void disable() {
@@ -175,6 +179,10 @@ public class Scheduler {
             nextScheduler();
         }
 
+        if (Config.enableDebug) {
+            Logger.info("Scheduler with name " + this.name + " will fun at " + calendar + " (" + calendar.getTimeInMillis() + "ms)", Logger.LogType.INFO);
+        }
+
         switch (schedulerType) {
             case HOURLY:
                 timer.schedule(task, calendar.getTime(), 60 * 60 * 1000);
@@ -196,10 +204,6 @@ public class Scheduler {
 
     public String getFormattedTimeUntilNextTask() {
         return TimerBuilder.getStringTime((calendar.getTimeInMillis() - new GregorianCalendar().getTimeInMillis()) / 1000);
-    }
-
-    public void setImplementation(Implementation implementation) {
-        this.implementation = implementation;
     }
 
     public String getImplementationName() {
