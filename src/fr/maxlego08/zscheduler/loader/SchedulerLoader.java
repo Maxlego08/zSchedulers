@@ -45,8 +45,9 @@ public class SchedulerLoader implements Loader<Scheduler> {
         int dayOfMonth = 0;
         int dayOfWeek = 0;
         int month = 0;
-        int hour = configuration.getInt(path + "hour");
-        int minute = configuration.getInt(path + "minute");
+        int hour = configuration.getInt(path + "hour",0);
+        int minute = configuration.getInt(path + "minute", 0);
+        int second = configuration.getInt(path + "second", 0);
         int minPlayer = configuration.getInt(path + "minPlayer");
         List<String> commands = configuration.getStringList(path + "commands");
         ConfigurationSection implementationSection = configuration.getConfigurationSection(path + "implementation.");
@@ -94,7 +95,7 @@ public class SchedulerLoader implements Loader<Scheduler> {
                 break;
         }
 
-        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, minute, minPlayer, commands, implementation, implementationName, implementationValues);
+        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues);
     }
 
     @Override

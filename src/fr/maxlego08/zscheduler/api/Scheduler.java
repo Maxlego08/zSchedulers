@@ -22,6 +22,7 @@ public class Scheduler {
     private final int dayOfWeek;
     private final int month;
     private final int hour;
+    private final int second;
     private final int minute;
     private final int minPlayer;
     private final List<String> commands;
@@ -31,7 +32,7 @@ public class Scheduler {
     private Implementation implementation;
     private Calendar calendar = null;
 
-    public Scheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName, Map<String, Object> implementationValues) {
+    public Scheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int second, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -39,6 +40,7 @@ public class Scheduler {
         this.dayOfWeek = dayOfWeek;
         this.month = month;
         this.hour = hour;
+        this.second = second;
         this.minute = minute;
         this.minPlayer = minPlayer;
         this.commands = commands;
@@ -155,23 +157,23 @@ public class Scheduler {
         Calendar now = new GregorianCalendar();
         switch (schedulerType) {
             case HOURLY:
-                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), minute);
+                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), minute, second);
                 break;
             case DAILY:
-                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), hour, minute);
+                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), hour, minute, second);
                 break;
             case WEEKLY:
-                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), hour, minute);
+                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), hour, minute, second);
                 int currentDayOfWeek = now.get(Calendar.DAY_OF_WEEK);
                 int daysUntilNextTargetDay = (dayOfWeek - currentDayOfWeek + 7) % 7;
 
                 calendar.add(Calendar.DAY_OF_MONTH, daysUntilNextTargetDay);
                 break;
             case MONTHLY:
-                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), dayOfMonth, hour, minute);
+                calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), dayOfMonth, hour, minute, second);
                 break;
             case YEARLY:
-                calendar = new GregorianCalendar(now.get(Calendar.YEAR), month, dayOfMonth, hour, minute);
+                calendar = new GregorianCalendar(now.get(Calendar.YEAR), month, dayOfMonth, hour, minute, second);
                 break;
         }
 
