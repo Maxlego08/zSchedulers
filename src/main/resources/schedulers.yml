@@ -38,6 +38,7 @@ schedulers:
   example0: # Every hour at 0 minute
     type: HOURLY
     minute: 0
+    second: 0
     # minPlayer: 10 # The minimum number of players for commands to execute
     commands:
       - "bc &fDont forget to add your server here : &chttps://serveur-minecraft-vote.fr/"
@@ -45,6 +46,7 @@ schedulers:
     type: DAILY
     hour: 18
     minute: 0
+    second: 0
     minPlayer: 10 # The minimum number of players for commands to execute
     commands:
       - "bc Daily broadcast message everyday at 18h00"
