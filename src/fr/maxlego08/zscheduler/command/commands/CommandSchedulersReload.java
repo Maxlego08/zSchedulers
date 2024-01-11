@@ -10,7 +10,7 @@ public class CommandSchedulersReload extends VCommand {
 
     public CommandSchedulersReload(SchedulerPlugin plugin) {
         super(plugin);
-        this.setPermission(Permission.SCHEDULERS_RELOAD);
+        this.setPermission(Permission.ZSCHEDULERS_RELOAD);
         this.addSubCommand("reload", "rl");
         this.setDescription(Message.DESCRIPTION_RELOAD);
     }

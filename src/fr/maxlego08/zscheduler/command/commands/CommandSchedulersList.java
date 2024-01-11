@@ -15,7 +15,7 @@ public class CommandSchedulersList extends VCommand {
 
     public CommandSchedulersList(SchedulerPlugin plugin) {
         super(plugin);
-        this.setPermission(Permission.SCHEDULERS_LIST);
+        this.setPermission(Permission.ZSCHEDULERS_LIST);
         this.addSubCommand("list");
         this.setDescription(Message.DESCRIPTION_LIST);
     }
