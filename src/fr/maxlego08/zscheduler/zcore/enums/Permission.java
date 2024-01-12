@@ -1,10 +1,10 @@
 package fr.maxlego08.zscheduler.zcore.enums;
 
 public enum Permission {
-	
-	SCHEDULERS_USE,
-	SCHEDULERS_RELOAD,
-	SCHEDULERS_LIST,
+
+	ZSCHEDULERS_USE,
+	ZSCHEDULERS_RELOAD,
+	ZSCHEDULERS_LIST,
 
 	;
 
