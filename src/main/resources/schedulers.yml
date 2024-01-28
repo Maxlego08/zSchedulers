@@ -74,3 +74,10 @@ schedulers:
     minute: 0
     commands:
       - "bc Broadcast message every first of year at 00h00"
+
+  # example5:
+  #   type: EVERY_MINUTE
+  #  initialDelay: 0
+  #  period: 1
+  #  commands:
+  #    - "bc &fHey its run every minute !"
