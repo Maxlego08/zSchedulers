@@ -2,6 +2,7 @@ package fr.maxlego08.zscheduler.command.commands;
 
 import fr.maxlego08.zscheduler.SchedulerPlugin;
 import fr.maxlego08.zscheduler.api.Scheduler;
+import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.command.VCommand;
 import fr.maxlego08.zscheduler.save.Config;
 import fr.maxlego08.zscheduler.zcore.enums.Message;
@@ -27,7 +28,7 @@ public class CommandSchedulersList extends VCommand {
         message(sender, Message.SCHEDULER_LIST_HEADER);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Config.dateFormat);
         schedulers.forEach(e -> {
-            message(sender, Message.SCHEDULER_LIST_LINE, "%name%", e.getName(), "%date%", simpleDateFormat.format(e.getCalendar().getTime()));
+            message(sender, Message.SCHEDULER_LIST_LINE, "%name%", e.getName(), "%date%", simpleDateFormat.format(e.getNextDate()));
         });
 
         return CommandType.SUCCESS;

@@ -8,4 +8,15 @@ public enum SchedulerType {
     MONTHLY,
     YEARLY,
 
+    EVERY_DAY,
+    EVERY_HOUR,
+    EVERY_MINUTE,
+    EVERY_SECOND,
+
+    ;
+
+    public boolean isRepeatScheduler() {
+        return this == EVERY_DAY || this == EVERY_HOUR || this == EVERY_MINUTE || this == EVERY_SECOND;
+    }
+
 }

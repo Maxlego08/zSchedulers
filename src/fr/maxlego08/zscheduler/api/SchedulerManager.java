@@ -1,5 +1,7 @@
 package fr.maxlego08.zscheduler.api;
 
+import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +25,10 @@ public interface SchedulerManager {
     Optional<Implementation> getImplementation(String name);
 
     /**
-     * Get a {@link Scheduler} by name
+     * Get a {@link ClassicScheduler} by name
      *
      * @param name - Scheduler name
-     * @return optional of {@link Scheduler}
+     * @return optional of {@link ClassicScheduler}
      */
     Optional<Scheduler> getScheduler(String name);
 
