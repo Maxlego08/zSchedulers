@@ -2,6 +2,7 @@ package fr.maxlego08.zscheduler;
 
 import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
+import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.api.SchedulerManager;
 import fr.maxlego08.zscheduler.loader.SchedulerLoader;
 import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
@@ -28,7 +29,7 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
         this.plugin = plugin;
         LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
 
-        // %zscheduler_time_<name>%
+        // %zschedulers_time_<name>%
         placeholder.register("time_", (player, args) -> {
             Optional<Scheduler> optional = getScheduler(args);
             if (optional.isPresent()) {
@@ -38,13 +39,13 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
             return "Scheduler " + args + " not found";
         });
 
-        // %zscheduler_date_<name>%
+        // %zschedulers_date_<name>%
         placeholder.register("date_", (player, args) -> {
             Optional<Scheduler> optional = getScheduler(args);
             if (optional.isPresent()) {
                 Scheduler scheduler = optional.get();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Config.dateFormat);
-                return simpleDateFormat.format(scheduler.getCalendar().getTime());
+                return simpleDateFormat.format(scheduler.getNextDate());
             }
             return "Scheduler " + args + " not found";
         });
@@ -98,9 +99,9 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
         if (!optional.isPresent()) {
             implementations.add(implementation);
 
-            schedulers.forEach(sc -> {
-                if (sc.getImplementationName() != null && sc.getImplementationName().equalsIgnoreCase(implementation.getName())) {
-                    sc.setImplementation(implementation);
+            schedulers.forEach(scheduler -> {
+                if (scheduler.getImplementationName() != null && scheduler.getImplementationName().equalsIgnoreCase(implementation.getName())) {
+                    scheduler.setImplementation(implementation);
                 }
             });
 

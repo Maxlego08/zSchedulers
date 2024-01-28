@@ -3,7 +3,9 @@ package fr.maxlego08.zscheduler.loader;
 import fr.maxlego08.zscheduler.SchedulerPlugin;
 import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
+import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.api.SchedulerType;
+import fr.maxlego08.zscheduler.api.schedulers.RepeatScheduler;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.loader.Loader;
 import org.bukkit.configuration.ConfigurationSection;
@@ -45,9 +47,11 @@ public class SchedulerLoader implements Loader<Scheduler> {
         int dayOfMonth = 0;
         int dayOfWeek = 0;
         int month = 0;
-        int hour = configuration.getInt(path + "hour",0);
+        int hour = configuration.getInt(path + "hour", 0);
         int minute = configuration.getInt(path + "minute", 0);
         int second = configuration.getInt(path + "second", 0);
+        int period = configuration.getInt(path + "period", 0);
+        int initialDelay = configuration.getInt(path + "initialDelay", 0);
         int minPlayer = configuration.getInt(path + "minPlayer");
         List<String> commands = configuration.getStringList(path + "commands");
         ConfigurationSection implementationSection = configuration.getConfigurationSection(path + "implementation.");
@@ -95,7 +99,10 @@ public class SchedulerLoader implements Loader<Scheduler> {
                 break;
         }
 
-        return new Scheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues);
+        if (schedulerType.isRepeatScheduler()) {
+            return new RepeatScheduler(plugin, name, schedulerType, initialDelay, period, minPlayer, commands, implementationName, implementationValues);
+        }
+        return new ClassicScheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues);
     }
 
     @Override
