@@ -26,10 +26,12 @@ public class SchedulerLoader implements Loader<Scheduler> {
 
     private final SchedulerPlugin plugin;
     private final String name;
+    private final long previousExecution;
 
-    public SchedulerLoader(SchedulerPlugin plugin, String name) {
+    public SchedulerLoader(SchedulerPlugin plugin, String name, long previousExecution) {
         this.plugin = plugin;
         this.name = name;
+        this.previousExecution = previousExecution;
     }
 
     @Override
@@ -52,6 +54,7 @@ public class SchedulerLoader implements Loader<Scheduler> {
         int second = configuration.getInt(path + "second", 0);
         int period = configuration.getInt(path + "period", 0);
         int initialDelay = configuration.getInt(path + "initialDelay", 0);
+        boolean saveTimer = configuration.getBoolean(path + "saveTimer", false);
         int minPlayer = configuration.getInt(path + "minPlayer");
         List<String> commands = configuration.getStringList(path + "commands");
         ConfigurationSection implementationSection = configuration.getConfigurationSection(path + "implementation.");
@@ -100,7 +103,13 @@ public class SchedulerLoader implements Loader<Scheduler> {
         }
 
         if (schedulerType.isRepeatScheduler()) {
-            return new RepeatScheduler(plugin, name, schedulerType, initialDelay, period, minPlayer, commands, implementationName, implementationValues);
+            if (previousExecution != 0) {
+                initialDelay = (int) Math.max(0, schedulerType.convertToTimeUnit().toSeconds(period) - previousExecution);
+                Logger.info("Previous execution of " + name + " found. Starting next execution in " + initialDelay + " seconds", Logger.LogType.INFO);
+            } else {
+                initialDelay = (int) schedulerType.convertToTimeUnit().toSeconds(initialDelay);
+            }
+            return new RepeatScheduler(plugin, name, schedulerType, initialDelay, saveTimer, period, minPlayer, commands, implementationName, implementationValues);
         }
         return new ClassicScheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues);
     }

@@ -8,6 +8,7 @@ import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.builder.TimerBuilder;
 import org.bukkit.Bukkit;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class RepeatScheduler implements Scheduler {
-
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     private final SchedulerPlugin plugin;
     private final String name;
@@ -32,8 +32,10 @@ public class RepeatScheduler implements Scheduler {
     private final Map<String, Object> implementationValues;
     private Implementation implementation;
     private ScheduledFuture<?> scheduledFuture;
+    private Instant lastExecution;
+    private boolean saveTimer;
 
-    public RepeatScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, long initialDelay, long period, int minPlayer, List<String> commands, String implementationName, Map<String, Object> implementationValues) {
+    public RepeatScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, long initialDelay, boolean saveTimer, long period, int minPlayer, List<String> commands, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -43,22 +45,8 @@ public class RepeatScheduler implements Scheduler {
         this.commands = commands;
         this.implementationName = implementationName;
         this.implementationValues = implementationValues;
-
-        switch (schedulerType) {
-            case EVERY_DAY:
-                this.timeUnit = TimeUnit.DAYS;
-                break;
-            case EVERY_MINUTE:
-                this.timeUnit = TimeUnit.MINUTES;
-                break;
-            case EVERY_SECOND:
-                this.timeUnit = TimeUnit.SECONDS;
-                break;
-            case EVERY_HOUR:
-            default:
-                this.timeUnit = TimeUnit.HOURS;
-                break;
-        }
+        this.timeUnit = schedulerType.convertToTimeUnit();
+        this.saveTimer = saveTimer;
     }
 
     @Override
@@ -75,12 +63,14 @@ public class RepeatScheduler implements Scheduler {
                     if (implementation != null) {
                         implementation.schedule(this);
                     }
+
+                    lastExecution = Instant.now();
                 } else {
                     Logger.info("Not enough players to execute the scheduler " + name + ", minimum player: " + minPlayer, Logger.LogType.INFO);
                 }
             });
 
-        }, this.initialDelay, this.period, this.timeUnit);
+        }, this.initialDelay, this.timeUnit.toSeconds(this.period), TimeUnit.SECONDS);
     }
 
     @Override
@@ -163,5 +153,13 @@ public class RepeatScheduler implements Scheduler {
     @Override
     public Map<String, Object> getImplementationValues() {
         return implementationValues;
+    }
+
+    public Instant getLastExecution() {
+        return lastExecution;
+    }
+
+    public boolean isSaveTimer() {
+        return saveTimer;
     }
 }
