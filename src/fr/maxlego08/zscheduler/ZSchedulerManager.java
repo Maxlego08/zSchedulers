@@ -4,6 +4,7 @@ import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
 import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.api.SchedulerManager;
+import fr.maxlego08.zscheduler.api.schedulers.RepeatScheduler;
 import fr.maxlego08.zscheduler.loader.SchedulerLoader;
 import fr.maxlego08.zscheduler.placeholder.LocalPlaceholder;
 import fr.maxlego08.zscheduler.save.Config;
@@ -16,9 +17,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 
 public class ZSchedulerManager implements Saveable, SchedulerManager {
     private final List<Implementation> implementations = new ArrayList<>();
@@ -54,6 +55,23 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
     @Override
     public void save(Persist persist) {
         schedulers.forEach(Scheduler::disable);
+
+        Map<String, Long> schedulerLastExecutionMap = new HashMap<>();
+        for (Scheduler scheduler : schedulers) {
+            scheduler.disable();
+            if (!(scheduler instanceof RepeatScheduler))
+                continue;
+
+            RepeatScheduler repeatScheduler = (RepeatScheduler) scheduler;
+            if (repeatScheduler.isSaveTimer()) {
+                Instant lastExecution = repeatScheduler.getLastExecution();
+                if (lastExecution != null) {
+                    schedulerLastExecutionMap.put(scheduler.getName(), Duration.between(lastExecution, Instant.now()).getSeconds());
+                }
+            }
+        }
+        persist.save(schedulerLastExecutionMap, "previousExecutions");
+
         schedulers.clear();
     }
 
@@ -73,8 +91,9 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
             return;
         }
 
+        Map<String, Double> previousExecutions = persist.load(Map.class, "previousExecutions");
         for (String key : configurationSection.getKeys(false)) {
-            Loader<Scheduler> loader = new SchedulerLoader(plugin, key);
+            Loader<Scheduler> loader = new SchedulerLoader(plugin, key, previousExecutions.getOrDefault(key, 0D).longValue());
             String path = "schedulers." + key + ".";
             Scheduler scheduler = loader.load(configuration, path);
             if (scheduler == null) continue;
