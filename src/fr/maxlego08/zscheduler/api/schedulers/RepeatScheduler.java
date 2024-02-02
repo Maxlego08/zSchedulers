@@ -35,7 +35,7 @@ public class RepeatScheduler implements Scheduler {
     private Instant lastExecution;
     private final boolean saveTimer;
 
-    public RepeatScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, long initialDelay, boolean saveTimer, long period, int minPlayer, List<String> commands, String implementationName, Map<String, Object> implementationValues) {
+    public RepeatScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, Instant lastExecution, long initialDelay, boolean saveTimer, long period, int minPlayer, List<String> commands, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -47,6 +47,7 @@ public class RepeatScheduler implements Scheduler {
         this.implementationValues = implementationValues;
         this.timeUnit = schedulerType.convertToTimeUnit();
         this.saveTimer = saveTimer;
+        this.lastExecution = lastExecution;
     }
 
     @Override
