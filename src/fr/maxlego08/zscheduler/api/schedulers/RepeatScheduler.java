@@ -33,7 +33,7 @@ public class RepeatScheduler implements Scheduler {
     private Implementation implementation;
     private ScheduledFuture<?> scheduledFuture;
     private Instant lastExecution;
-    private boolean saveTimer;
+    private final boolean saveTimer;
 
     public RepeatScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, long initialDelay, boolean saveTimer, long period, int minPlayer, List<String> commands, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
