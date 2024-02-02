@@ -103,7 +103,8 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
 
         Map<String, Double> previousExecutions = persist.load(Map.class, "previousExecutions");
         for (String key : configurationSection.getKeys(false)) {
-            Loader<Scheduler> loader = new SchedulerLoader(plugin, key, previousExecutions.getOrDefault(key, 0D).longValue());
+            long previousExecution = previousExecutions == null ? 0 : previousExecutions.getOrDefault(key, 0D).longValue();
+            Loader<Scheduler> loader = new SchedulerLoader(plugin, key, previousExecution);
             String path = "schedulers." + key + ".";
             Scheduler scheduler = loader.load(configuration, path);
             if (scheduler == null) continue;
