@@ -23,6 +23,7 @@
 # Placeholders:
 #   - %zschedulers_time_<scheduler name>% - Displays the time remaining before the next placeholder run
 #   - %zschedulers_date_<scheduler name>% - Displays the date for the next placeholder run
+#   - %zschedulers_second_<scheduler name>% - Displays the seconds between now and the next scheduler
 #
 # Commands:
 #   - /zschedulers list - Display scheduler list

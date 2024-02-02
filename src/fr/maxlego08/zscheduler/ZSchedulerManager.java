@@ -2,7 +2,6 @@ package fr.maxlego08.zscheduler;
 
 import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
-import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.api.SchedulerManager;
 import fr.maxlego08.zscheduler.api.schedulers.RepeatScheduler;
 import fr.maxlego08.zscheduler.loader.SchedulerLoader;
@@ -47,6 +46,17 @@ public class ZSchedulerManager implements Saveable, SchedulerManager {
                 Scheduler scheduler = optional.get();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Config.dateFormat);
                 return simpleDateFormat.format(scheduler.getNextDate());
+            }
+            return "Scheduler " + args + " not found";
+        });
+
+        // %zschedulers_second_<name>%
+        placeholder.register("second_", (player, args) -> {
+            Optional<Scheduler> optional = getScheduler(args);
+            if (optional.isPresent()) {
+                Scheduler scheduler = optional.get();
+                Date date = scheduler.getNextDate();
+                return String.valueOf(Duration.between(Instant.now(), date.toInstant()).getSeconds());
             }
             return "Scheduler " + args + " not found";
         });
