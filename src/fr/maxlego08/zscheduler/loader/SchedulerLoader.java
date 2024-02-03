@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.text.DateFormatSymbols;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -109,7 +110,8 @@ public class SchedulerLoader implements Loader<Scheduler> {
             } else {
                 initialDelay = (int) schedulerType.convertToTimeUnit().toSeconds(initialDelay);
             }
-            return new RepeatScheduler(plugin, name, schedulerType, initialDelay, saveTimer, period, minPlayer, commands, implementationName, implementationValues);
+            Instant lastExecution = Instant.now().minusSeconds(previousExecution);
+            return new RepeatScheduler(plugin, name, schedulerType, lastExecution, initialDelay, saveTimer, period, minPlayer, commands, implementationName, implementationValues);
         }
         return new ClassicScheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues);
     }
