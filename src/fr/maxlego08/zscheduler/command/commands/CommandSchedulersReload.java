@@ -18,7 +18,7 @@ public class CommandSchedulersReload extends VCommand {
     @Override
     protected CommandType perform(SchedulerPlugin plugin) {
 
-        plugin.getManager().save(null);
+        plugin.getManager().save(plugin.getPersist());
         plugin.reloadFiles();
         message(sender, Message.RELOAD);
 
