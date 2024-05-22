@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -30,10 +31,10 @@ public class RepeatScheduler implements Scheduler {
     private final List<String> commands;
     private final String implementationName;
     private final Map<String, Object> implementationValues;
+    private final boolean saveTimer;
     private Implementation implementation;
     private ScheduledFuture<?> scheduledFuture;
     private Instant lastExecution;
-    private final boolean saveTimer;
 
     public RepeatScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, Instant lastExecution, long initialDelay, boolean saveTimer, long period, int minPlayer, List<String> commands, String implementationName, Map<String, Object> implementationValues) {
         this.plugin = plugin;
@@ -154,6 +155,11 @@ public class RepeatScheduler implements Scheduler {
     @Override
     public Map<String, Object> getImplementationValues() {
         return implementationValues;
+    }
+
+    @Override
+    public TimeZone getTimerZone() {
+        return null;
     }
 
     public Instant getLastExecution() {

@@ -3,8 +3,8 @@ package fr.maxlego08.zscheduler.loader;
 import fr.maxlego08.zscheduler.SchedulerPlugin;
 import fr.maxlego08.zscheduler.api.Implementation;
 import fr.maxlego08.zscheduler.api.Scheduler;
-import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.api.SchedulerType;
+import fr.maxlego08.zscheduler.api.schedulers.ClassicScheduler;
 import fr.maxlego08.zscheduler.api.schedulers.RepeatScheduler;
 import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.loader.Loader;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.IntStream;
 
 public class SchedulerLoader implements Loader<Scheduler> {
@@ -58,6 +59,11 @@ public class SchedulerLoader implements Loader<Scheduler> {
         boolean saveTimer = configuration.getBoolean(path + "saveTimer", false);
         int minPlayer = configuration.getInt(path + "minPlayer");
         List<String> commands = configuration.getStringList(path + "commands");
+        String timeZoneAsString = configuration.getString(path + "timeZone", null);
+        TimeZone timeZone = null;
+        if (timeZoneAsString != null) {
+            timeZone = TimeZone.getTimeZone(timeZoneAsString);
+        }
         ConfigurationSection implementationSection = configuration.getConfigurationSection(path + "implementation.");
         Implementation implementation = null;
         String implementationName = "";
@@ -113,7 +119,7 @@ public class SchedulerLoader implements Loader<Scheduler> {
             Instant lastExecution = Instant.now().minusSeconds(previousExecution);
             return new RepeatScheduler(plugin, name, schedulerType, lastExecution, initialDelay, saveTimer, period, minPlayer, commands, implementationName, implementationValues);
         }
-        return new ClassicScheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues);
+        return new ClassicScheduler(plugin, name, schedulerType, dayOfMonth, dayOfWeek, month, hour, second, minute, minPlayer, commands, implementation, implementationName, implementationValues, timeZone);
     }
 
     @Override

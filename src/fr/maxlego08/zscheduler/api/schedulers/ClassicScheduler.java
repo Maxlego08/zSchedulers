@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,10 +34,11 @@ public class ClassicScheduler implements Scheduler {
     private final String implementationName;
     private final Timer timer = new Timer();
     private final Map<String, Object> implementationValues;
+    private final TimeZone timeZone;
     private Implementation implementation;
     private Calendar calendar = null;
 
-    public ClassicScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int second, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName, Map<String, Object> implementationValues) {
+    public ClassicScheduler(SchedulerPlugin plugin, String name, SchedulerType schedulerType, int dayOfMonth, int dayOfWeek, int month, int hour, int second, int minute, int minPlayer, List<String> commands, Implementation implementation, String implementationName, Map<String, Object> implementationValues, TimeZone timeZone) {
         this.plugin = plugin;
         this.name = name;
         this.schedulerType = schedulerType;
@@ -51,11 +53,17 @@ public class ClassicScheduler implements Scheduler {
         this.implementation = implementation;
         this.implementationName = implementationName;
         this.implementationValues = implementationValues;
+        this.timeZone = timeZone;
     }
 
     @Override
     public Map<String, Object> getImplementationValues() {
         return implementationValues;
+    }
+
+    @Override
+    public TimeZone getTimerZone() {
+        return this.timeZone;
     }
 
     @Override
@@ -165,6 +173,11 @@ public class ClassicScheduler implements Scheduler {
         };
 
         Calendar now = new GregorianCalendar();
+
+        if (this.timeZone != null) {
+            now.setTimeZone(this.timeZone);
+        }
+
         switch (schedulerType) {
             case HOURLY:
                 calendar = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), minute, second);
@@ -185,6 +198,10 @@ public class ClassicScheduler implements Scheduler {
             case YEARLY:
                 calendar = new GregorianCalendar(now.get(Calendar.YEAR), month, dayOfMonth, hour, minute, second);
                 break;
+        }
+
+        if (this.timeZone != null) {
+            calendar.setTimeZone(this.timeZone);
         }
 
         if (calendar.before(now)) {
