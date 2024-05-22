@@ -2,6 +2,7 @@ package fr.maxlego08.zscheduler.api;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 public interface Scheduler {
 
@@ -22,5 +23,7 @@ public interface Scheduler {
     Date getNextDate();
 
     Map<String, Object> getImplementationValues();
+
+    TimeZone getTimerZone();
 
 }

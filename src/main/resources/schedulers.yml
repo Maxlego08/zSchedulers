@@ -41,6 +41,7 @@ schedulers:
     minute: 0
     second: 0
     # minPlayer: 10 # The minimum number of players for commands to execute
+    # timeZone: "America/New_York" # Set the timezone to a specific one, for example, "America/New_York"
     commands:
       - "bc &fDont forget to add your server here : &chttps://serveur-minecraft-vote.fr/"
   example1: # Every day at 18h00
@@ -49,6 +50,7 @@ schedulers:
     minute: 0
     second: 0
     minPlayer: 10 # The minimum number of players for commands to execute
+    # timeZone: "America/New_York" # Set the timezone to a specific one, for example, "America/New_York"
     commands:
       - "bc Daily broadcast message everyday at 18h00"
   example2: # Every monday at 15h30
