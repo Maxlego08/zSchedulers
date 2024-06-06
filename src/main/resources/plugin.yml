@@ -4,7 +4,7 @@ main: fr.maxlego08.zscheduler.SchedulerPlugin
 website: https://groupez.dev
 description: Scheduler plugin
 folia-supported: true
-version: 1.0.6
+version: 1.0.7
 api-version: 1.13
 depend:
   - PlaceholderAPI
