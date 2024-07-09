@@ -7,8 +7,7 @@ import fr.maxlego08.zscheduler.zcore.enums.Message;
 import fr.maxlego08.zscheduler.zcore.enums.Permission;
 import fr.maxlego08.zscheduler.zcore.utils.builder.CooldownBuilder;
 import fr.maxlego08.zscheduler.zcore.utils.builder.TimerBuilder;
-import fr.maxlego08.zscheduler.zcore.utils.nms.ItemStackUtils;
-import fr.maxlego08.zscheduler.zcore.utils.nms.NMSUtils;
+import fr.maxlego08.zscheduler.zcore.utils.nms.NmsVersion;
 import fr.maxlego08.zscheduler.zcore.utils.players.ActionBar;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -42,7 +41,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -65,27 +63,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("deprecation")
 public abstract class ZUtils extends MessageUtils {
 
-    private static final List<String> teleportPlayers = new ArrayList<String>();
-
-    /**
-     * Allows to encode an itemstack in base64
-     *
-     * @param item - ItemStack
-     * @return the encoded item
-     */
-    protected String encode(ItemStack item) {
-        return ItemStackUtils.serializeItemStack(item);
-    }
-
-    /**
-     * Allows to decode a string in ItemStack
-     *
-     * @param item - the encoded itemstack
-     * @return the decoded item
-     */
-    protected ItemStack decode(String item) {
-        return ItemStackUtils.deserializeItemStack(item);
-    }
+    private static final List<String> teleportPlayers = new ArrayList<>();
 
     /**
      * Allows to obtain a random number between a and b
@@ -129,23 +107,6 @@ public abstract class ZUtils extends MessageUtils {
             player.getInventory().addItem(item);
     }
 
-    // For plugin support from 1.8 to 1.12
-    private static Material[] byId;
-
-    static {
-        if (!NMSUtils.isNewVersion()) {
-            byId = new Material[0];
-            for (Material material : Material.values()) {
-                if (byId.length > material.getId()) {
-                    byId[material.getId()] = material;
-                } else {
-                    byId = Arrays.copyOfRange(byId, 0, material.getId() + 2);
-                    byId[material.getId()] = material;
-                }
-            }
-        }
-    }
-
     /**
      * Allows to return a material according to its ID Works only for plugins
      * from 1.8 to 1.12
@@ -154,7 +115,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return the material according to his id
      */
     protected Material getMaterial(int id) {
-        return byId.length > id && id >= 0 ? byId[id] : Material.AIR;
+        return Material.AIR;
     }
 
     /**
@@ -549,7 +510,7 @@ public abstract class ZUtils extends MessageUtils {
     protected String color(String message) {
         if (message == null)
             return null;
-        if (NMSUtils.isHexColor()) {
+        if (NmsVersion.getCurrentVersion().isHexVersion()) {
             Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
             Matcher matcher = pattern.matcher(message);
             while (matcher.find()) {
@@ -920,7 +881,7 @@ public abstract class ZUtils extends MessageUtils {
     public ItemStack playerHead(ItemStack itemStack, OfflinePlayer player) {
         String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()
                 ? itemStack.getItemMeta().getDisplayName() : null;
-        if (NMSUtils.isNewVersion()) {
+        if (NmsVersion.nmsVersion.isNewMaterial()) {
             if (itemStack.getType().equals(Material.PLAYER_HEAD) && name != null && name.startsWith("HEAD")) {
                 SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
                 name = name.replace("HEAD", "");
@@ -953,7 +914,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     protected ItemStack playerHead() {
-        return NMSUtils.isNewVersion() ? new ItemStack(Material.PLAYER_HEAD)
+        return NmsVersion.nmsVersion.isNewMaterial() ? new ItemStack(Material.PLAYER_HEAD)
                 : new ItemStack(getMaterial(397), 1, (byte) 3);
     }
 
@@ -1011,7 +972,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected boolean isPlayerHead(ItemStack itemStack) {
         Material material = itemStack.getType();
-        if (NMSUtils.isNewVersion())
+        if (NmsVersion.nmsVersion.isNewMaterial())
             return material.equals(Material.PLAYER_HEAD);
         return (material.equals(getMaterial(397))) && (itemStack.getDurability() == 3);
     }
@@ -1029,7 +990,7 @@ public abstract class ZUtils extends MessageUtils {
             throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = object.getClass();
         Field objectField = field.equals("commandMap") ? clazz.getDeclaredField(field)
-                : field.equals("knownCommands") ? NMSUtils.isNewVersion()
+                : field.equals("knownCommands") ? NmsVersion.nmsVersion.isNewMaterial()
                 ? clazz.getSuperclass().getDeclaredField(field) : clazz.getDeclaredField(field) : null;
         objectField.setAccessible(true);
         Object result = objectField.get(object);
@@ -1072,8 +1033,7 @@ public abstract class ZUtils extends MessageUtils {
     public void glow(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-        if (NMSUtils.getNMSVersion() != 1.7)
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStack.setItemMeta(itemMeta);
     }
 
