@@ -9,6 +9,7 @@ import fr.maxlego08.zscheduler.zcore.logger.Logger;
 import fr.maxlego08.zscheduler.zcore.utils.builder.TimerBuilder;
 import org.bukkit.Bukkit;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -209,7 +210,7 @@ public class ClassicScheduler implements Scheduler {
         }
 
         if (Config.enableDebug) {
-            Logger.info("Scheduler with name " + this.name + " will fun at " + calendar + " (" + calendar.getTimeInMillis() + "ms)", Logger.LogType.INFO);
+            Logger.info("Scheduler with name " + this.name + " will fun at " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(calendar.getTime()) + " (" + calendar.getTimeInMillis() + "ms)", Logger.LogType.INFO);
         }
 
         switch (schedulerType) {
